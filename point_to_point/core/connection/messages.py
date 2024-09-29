@@ -8,5 +8,4 @@ class Messages:
     not_ready = "not_ready"
     start = "start"
     finished = "finished"
-    other_text = "other_text"
-    this_text = "this_text"
+    text_changed = "text_changed"

@@ -1,6 +1,5 @@
 from PySide6.QtCore import QObject, Slot
 
-from core.config.config import config
 from core.window.main_window_ui import MainWindowUI
 
 
@@ -25,16 +24,10 @@ class MainWindow(QObject):
 
     @Slot()
     def openServerMenu(self) -> None:
-        if config["Connection"]["Connection"] == "Client":
-            print("Client is open")
-            return
         self.ui.main_layout.setCurrentIndex(1)
 
     @Slot()
     def openClientMenu(self) -> None:
-        if config["Connection"]["Connection"] == "Server":
-            print("Server is open")
-            return
         self.ui.main_layout.setCurrentIndex(2)
 
     @Slot()

@@ -22,6 +22,8 @@ class ServerWidget(QObject):
         self.ui.waiting.ui.back_button.clicked.connect(self.openServerMenu)
         self.ui.game_layout.ui.back_button.clicked.connect(self.openServerMenu)
 
+        self.ui.game_layout.text_changed.connect(self.onTextChanged)
+
         self.ui.server_menu.ui.open_connection_button.clicked.connect(self.openConnection)
         self.ui.server_menu.ui.disconnect_client_button.clicked.connect(self.disconnectClient)
         self.ui.server_menu.ui.close_connection_button.clicked.connect(self.closeConnection)
@@ -35,7 +37,7 @@ class ServerWidget(QObject):
         self.server_is_ready: bool = False
         self.client_is_ready: bool = False
 
-        self.message_list: list[str] = []
+        self.message_list: list[tuple[str, bytes | None]] = []
 
         self.ui.show()
 
@@ -64,8 +66,8 @@ class ServerWidget(QObject):
         self.ui.main_layout.setCurrentIndex(2)
 
     @Slot()
-    def sendMessage(self, message: str) -> None:
-        self.message_list.append(message)
+    def sendMessage(self, message: str, data: bytes | None = None) -> None:
+        self.message_list.append((message, data))
 
     @Slot()
     def openConnection(self) -> None:
@@ -87,7 +89,7 @@ class ServerWidget(QObject):
         print("[SERVER] Client disconnection...")
         self.client_connected = False
 
-        self.message_list.append(Messages.disconnect)
+        self.message_list.append((Messages.disconnect, None))
 
     @Slot()
     def closeConnection(self) -> None:
@@ -156,25 +158,38 @@ class ServerWidget(QObject):
                     self.sendMessage(Messages.not_ready)
             if message == Messages.start:
                 self.openGameLayout()
+            if message == Messages.text_changed:
+                data_length = client.recv(Messages.header).decode(Messages.format)
+                data_length = int(data_length)
+                data = client.recv(data_length).decode(Messages.format)
+                self.ui.game_layout.ui.other_input_line.setText(data)
             # if message == Messages.finished:
             #     self.client_is_ready = False
             #     self.openServerMenu()
 
             # sending
             if not self.message_list:
-                self.message_list.append(Messages.nothing)
+                self.message_list.append((Messages.nothing, None))
 
-            message = self.message_list[0]
+            message, data = self.message_list[0]
             self.message_list = self.message_list[1::]
 
             print(f"[SERVER] Message sent \"{message}\"")
 
-            message = message.encode(Messages.format)
-            message_length = len(message)
+            message_encoded = message.encode(Messages.format)
+            message_length = len(message_encoded)
             send_length: bytes = str(message_length).encode(Messages.format)
             send_length += b" " * (Messages.header - len(send_length))
             client.send(send_length)
-            client.send(message)
+            client.send(message_encoded)
+            if message == Messages.text_changed:
+                if data is None:
+                    data = "None".encode(Messages.format)
+                data_length = len(data)
+                send_length: bytes = str(data_length).encode(Messages.format)
+                send_length += b" " * (Messages.header - len(send_length))
+                client.send(send_length)
+                client.send(data)
 
         client.close()
 
@@ -182,3 +197,7 @@ class ServerWidget(QObject):
         if self.listeing_to_clients:
             self.closeConnection()
         self.back_to_main_menu.emit()
+
+    def onTextChanged(self, text: str) -> None:
+        self.sendMessage(Messages.text_changed, text.encode(Messages.format))
+

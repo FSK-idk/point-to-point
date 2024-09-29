@@ -16,17 +16,16 @@ class GameLayoutWidgetUI(QWidget):
         button_font: QFont = QFont()
         button_font.setPointSize(18)
 
-        self.other_line_edit: InputLine = InputLine()
-        self.other_line_edit.setFixedWidth(600)
-        self.other_line_edit.setFont(button_font)
+        self.other_input_line: InputLine = InputLine()
+        self.other_input_line.setReadOnly(True)
+        self.other_input_line.setFixedWidth(600)
+        self.other_input_line.setFont(button_font)
+        self.other_input_line.setText(text)
 
-        self.other_line_edit.setText(text)
-
-        self.this_line_edit: InputLine = InputLine()
-        self.this_line_edit.setFixedWidth(600)
-        self.this_line_edit.setFont(button_font)
-
-        self.this_line_edit.setText(text)
+        self.this_input_line: InputLine = InputLine()
+        self.this_input_line.setFixedWidth(600)
+        self.this_input_line.setFont(button_font)
+        self.this_input_line.setText(text)
 
         self.back_button: QPushButton = QPushButton(self)
         self.back_button.setFixedWidth(300)
@@ -44,9 +43,9 @@ class GameLayoutWidgetUI(QWidget):
         main_layout.setSpacing(0)
         main_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
         main_layout.addStretch()
-        main_layout.addWidget(self.other_line_edit)
+        main_layout.addWidget(self.other_input_line)
         main_layout.addStretch()
-        main_layout.addWidget(self.this_line_edit)
+        main_layout.addWidget(self.this_input_line)
         main_layout.addStretch()
         main_layout.addLayout(button_layout)
 

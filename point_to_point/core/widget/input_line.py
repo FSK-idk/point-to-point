@@ -7,7 +7,7 @@ class InputLine(QLineEdit):
         super().__init__(parent)
 
     def keyPressEvent(self, arg__1: QKeyEvent) -> None:
-        if self.text() and arg__1.text() == self.text()[0]:
+        if self.text() and arg__1.text() == self.text()[0] and not self.isReadOnly():
             self.setText(self.text()[1::])
         self.setCursorPosition(0)
 
