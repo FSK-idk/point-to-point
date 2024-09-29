@@ -1,5 +1,6 @@
 from PySide6.QtCore import QObject, Slot
 
+from core.config.config import config
 from core.window.main_window_ui import MainWindowUI
 
 
@@ -9,10 +10,14 @@ class MainWindow(QObject):
 
         self.ui: MainWindowUI = MainWindowUI()
 
+        self.ui.main_menu.ui.play_button.clicked.connect(self.openGameLayout)
         self.ui.main_menu.ui.server_button.clicked.connect(self.openServerMenu)
         self.ui.main_menu.ui.client_button.clicked.connect(self.openClientMenu)
+        self.ui.main_menu.ui.settings_button.clicked.connect(self.openSettings)
         self.ui.server_menu.ui.back_button.clicked.connect(self.openMainMenu)
         self.ui.client_menu.ui.back_button.clicked.connect(self.openMainMenu)
+        self.ui.game_layout.ui.back_button.clicked.connect(self.openMainMenu)
+        self.ui.settings.ui.back_button.clicked.connect(self.openMainMenu)
 
         self.ui.show()
 
@@ -22,8 +27,28 @@ class MainWindow(QObject):
 
     @Slot()
     def openServerMenu(self) -> None:
+        if config["Connection"]["Connection"] == "Client":
+            print("Client is open")
+            return
         self.ui.main_layout.setCurrentIndex(1)
 
     @Slot()
     def openClientMenu(self) -> None:
+        if config["Connection"]["Connection"] == "Server":
+            print("Server is open")
+            return
         self.ui.main_layout.setCurrentIndex(2)
+
+    @Slot()
+    def openGameLayout(self) -> None:
+        if config["Connection"]["Connection"] == "None":
+            print("First open connection")
+            return
+        if config["Connection"]["Connected"] == "False":
+            print("No one is connected")
+            return
+        self.ui.main_layout.setCurrentIndex(3)
+
+    @Slot()
+    def openSettings(self) -> None:
+        self.ui.main_layout.setCurrentIndex(4)

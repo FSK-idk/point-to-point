@@ -7,7 +7,6 @@ class ClientMenuWidgetUI(QWidget):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
-        self.setWindowTitle("Connect")
         self.resize(650, 400)
 
         button_font: QFont = QFont()
