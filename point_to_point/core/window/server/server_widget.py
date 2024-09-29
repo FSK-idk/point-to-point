@@ -17,8 +17,9 @@ class ServerWidget(QObject):
 
         self.ui: ServerWidgetUI = ServerWidgetUI()
 
-        self.ui.server_menu.ui.play_button.clicked.connect(self.openGameLayout)
+        self.ui.server_menu.ui.play_button.clicked.connect(self.openWaiting)
         self.ui.server_menu.ui.back_button.clicked.connect(self.backToMainMenu)
+        self.ui.waiting.ui.back_button.clicked.connect(self.openServerMenu)
         self.ui.game_layout.ui.back_button.clicked.connect(self.openServerMenu)
 
         self.ui.server_menu.ui.open_connection_button.clicked.connect(self.openConnection)
@@ -28,8 +29,11 @@ class ServerWidget(QObject):
         self.host: str = socket.gethostbyname(socket.gethostname())
         self.port: int = 5050
 
-        self.listeing_for_clients: bool = False
+        self.listeing_to_clients: bool = False
         self.client_connected: bool = False
+
+        self.server_is_ready: bool = False
+        self.client_is_ready: bool = False
 
         self.message_list: list[str] = []
 
@@ -37,13 +41,27 @@ class ServerWidget(QObject):
 
     @Slot()
     def openServerMenu(self) -> None:
+        self.server_is_ready = False
+        self.sendMessage(Messages.not_ready)
+        self.ui.current_widget = "server_menu"
         self.ui.main_layout.setCurrentIndex(0)
 
     @Slot()
-    def openGameLayout(self) -> None:
-        if not self.client_connected:
+    def openWaiting(self) -> None:
+        if not self.listeing_to_clients:
             return
+        self.server_is_ready = True
+        self.sendMessage(Messages.ready)
+        if self.client_is_ready:
+            self.openGameLayout()
+            self.sendMessage(Messages.start)
+        self.ui.current_widget = "waiting"
         self.ui.main_layout.setCurrentIndex(1)
+
+    @Slot()
+    def openGameLayout(self) -> None:
+        self.ui.current_widget = "game_layout"
+        self.ui.main_layout.setCurrentIndex(2)
 
     @Slot()
     def sendMessage(self, message: str) -> None:
@@ -51,7 +69,7 @@ class ServerWidget(QObject):
 
     @Slot()
     def openConnection(self) -> None:
-        if self.listeing_for_clients:
+        if self.listeing_to_clients:
             return
 
         self.server: socket.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -73,13 +91,13 @@ class ServerWidget(QObject):
 
     @Slot()
     def closeConnection(self) -> None:
-        if not self.listeing_for_clients:
+        if not self.listeing_to_clients:
             return
 
         self.disconnectClient()
 
         print("[SERVER] Close connection...")
-        self.listeing_for_clients = False
+        self.listeing_to_clients = False
 
         fake_client: socket.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         fake_client.connect((self.host, self.port))
@@ -93,16 +111,16 @@ class ServerWidget(QObject):
         print("Open connection...")
         print(f"Host: {self.host}")
         print(f"Port: {self.port}")
-        self.listeing_for_clients = True
+        self.listeing_to_clients = True
 
         self.server.listen()
-        while self.listeing_for_clients:
+        while self.listeing_to_clients:
             if self.client_connected:
                 time.sleep(1)
                 continue
 
             client, address = self.server.accept()
-            if not self.listeing_for_clients:
+            if not self.listeing_to_clients:
                 break
 
             thread = threading.Thread(target=self.handleClient, args=(client, address))
@@ -126,6 +144,21 @@ class ServerWidget(QObject):
 
             if message == Messages.disconnect:
                 self.disconnectClient()
+            if message == Messages.ready:
+                self.client_is_ready = True
+                if self.server_is_ready:
+                    self.openGameLayout()
+                    self.sendMessage(Messages.start)
+            if message == Messages.not_ready:
+                self.client_is_ready = False
+                if self.ui.current_widget == "game_layout":
+                    self.openServerMenu()
+                    self.sendMessage(Messages.not_ready)
+            if message == Messages.start:
+                self.openGameLayout()
+            # if message == Messages.finished:
+            #     self.client_is_ready = False
+            #     self.openServerMenu()
 
             # sending
             if not self.message_list:
@@ -146,6 +179,6 @@ class ServerWidget(QObject):
         client.close()
 
     def backToMainMenu(self) -> None:
-        if self.listeing_for_clients:
+        if self.listeing_to_clients:
             self.closeConnection()
         self.back_to_main_menu.emit()

@@ -16,8 +16,9 @@ class ClientWidget(QObject):
 
         self.ui: ClientWidgetUI = ClientWidgetUI()
 
-        self.ui.client_menu.ui.play_button.clicked.connect(self.openGameLayout)
+        self.ui.client_menu.ui.play_button.clicked.connect(self.openWaiting)
         self.ui.client_menu.ui.back_button.clicked.connect(self.backToMainMenu)
+        self.ui.waiting.ui.back_button.clicked.connect(self.openClientMenu)
         self.ui.game_layout.ui.back_button.clicked.connect(self.openClientMenu)
 
         self.ui.client_menu.ui.connect_to_server_button.clicked.connect(self.connectToServer)
@@ -25,19 +26,36 @@ class ClientWidget(QObject):
 
         self.connected_to_server: bool = False
 
+        self.server_is_ready: bool = False
+        self.client_is_ready: bool = False
+
         self.message_list: list[str] = []
 
         self.ui.show()
 
     @Slot()
     def openClientMenu(self) -> None:
+        self.client_is_ready = False
+        self.sendMessage(Messages.not_ready)
+        self.ui.current_widget = "client_menu"
         self.ui.main_layout.setCurrentIndex(0)
 
     @Slot()
-    def openGameLayout(self) -> None:
+    def openWaiting(self) -> None:
         if not self.connected_to_server:
             return
+        self.client_is_ready = True
+        self.sendMessage(Messages.ready)
+        if self.server_is_ready:
+            self.openGameLayout()
+            self.sendMessage(Messages.start)
+        self.ui.current_widget = "waiting"
         self.ui.main_layout.setCurrentIndex(1)
+
+    @Slot()
+    def openGameLayout(self) -> None:
+        self.ui.current_widget = "game_layout"
+        self.ui.main_layout.setCurrentIndex(2)
 
     @Slot()
     def sendMessage(self, message: str) -> None:
@@ -103,6 +121,21 @@ class ClientWidget(QObject):
             message = self.client.recv(message_length).decode(Messages.format)
             if message == Messages.disconnect:
                 self.connected_to_server = False
+            if message == Messages.ready:
+                self.server_is_ready = True
+                if self.client_is_ready:
+                    self.openGameLayout()
+                    self.sendMessage(Messages.start)
+            if message == Messages.not_ready:
+                self.server_is_ready = False
+                if self.ui.current_widget == "game_layout":
+                    self.openClientMenu()
+                    self.sendMessage(Messages.not_ready)
+            if message == Messages.start:
+                self.openGameLayout()
+            # if message == Messages.finished:
+            #     self.server_is_ready = False
+            #     self.openClientMenu()
 
             print(f"[CLIENT] Message received \"{message}\"")
 
