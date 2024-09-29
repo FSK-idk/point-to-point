@@ -1,9 +1,8 @@
 from PySide6.QtWidgets import QMainWindow, QWidget, QStackedLayout
 
 from core.window.main_menu.main_menu_widget import MainMenuWidget
-from core.window.server_menu.server_menu_widget import ServerMenuWidget
-from core.window.client_menu.client_menu_widget import ClientMenuWidget
-from core.window.game_layout.game_layout_widget import GameLayoutWidget
+from core.window.server.server_widget import ServerWidget
+from core.window.client.client_widget import ClientWidget
 from core.window.settings.settings_widget import SettingsWidget
 
 
@@ -16,16 +15,14 @@ class MainWindowUI(QMainWindow):
         self.setWindowTitle("Point to Point")
 
         self.main_menu: MainMenuWidget = MainMenuWidget()
-        self.server_menu: ServerMenuWidget = ServerMenuWidget()
-        self.client_menu: ClientMenuWidget = ClientMenuWidget()
-        self.game_layout: GameLayoutWidget = GameLayoutWidget()
+        self.server: ServerWidget = ServerWidget()
+        self.client: ClientWidget = ClientWidget()
         self.settings: SettingsWidget = SettingsWidget()
 
         self.main_layout: QStackedLayout = QStackedLayout()
         self.main_layout.addWidget(self.main_menu.ui)
-        self.main_layout.addWidget(self.server_menu.ui)
-        self.main_layout.addWidget(self.client_menu.ui)
-        self.main_layout.addWidget(self.game_layout.ui)
+        self.main_layout.addWidget(self.server.ui)
+        self.main_layout.addWidget(self.client.ui)
         self.main_layout.addWidget(self.settings.ui)
 
         self.main_layout.setCurrentIndex(0)

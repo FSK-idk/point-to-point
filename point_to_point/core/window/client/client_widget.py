@@ -1,26 +1,27 @@
 import threading
 import socket
 
-from PySide6.QtCore import QObject
+from PySide6.QtCore import QObject, Slot, Signal
 
 from core.config.config import config
 from core.connection.messages import Messages
-from core.window.client_menu.client_menu_widget_ui import ClientMenuWidgetUI
+from core.window.client.client_widget_ui import ClientWidgetUI
 
 
-class ClientMenuWidget(QObject):
+class ClientWidget(QObject):
+    back_to_main_menu: Signal = Signal()
+
     def __init__(self) -> None:
         super().__init__()
 
-        self.ui: ClientMenuWidgetUI = ClientMenuWidgetUI()
+        self.ui: ClientWidgetUI = ClientWidgetUI()
 
-        self.ui.connect_to_server_button.clicked.connect(self.connectToServer)
-        self.ui.disconnect_from_server_button.clicked.connect(self.disconnectFromServer)
-        
-        self.host: str = socket.gethostbyname(socket.gethostname())
-        self.port: int = 5050
-        self.header: int = 64
-        self.format: str = "utf-8"
+        self.ui.client_menu.ui.play_button.clicked.connect(self.openGameLayout)
+        self.ui.client_menu.ui.back_button.clicked.connect(self.backToMainMenu)
+        self.ui.game_layout.ui.back_button.clicked.connect(self.openClientMenu)
+
+        self.ui.client_menu.ui.connect_to_server_button.clicked.connect(self.connectToServer)
+        self.ui.client_menu.ui.disconnect_from_server_button.clicked.connect(self.disconnectFromServer)
 
         self.connected_to_server: bool = False
 
@@ -28,42 +29,51 @@ class ClientMenuWidget(QObject):
 
         self.ui.show()
 
+    @Slot()
+    def openClientMenu(self) -> None:
+        self.ui.main_layout.setCurrentIndex(0)
+
+    @Slot()
+    def openGameLayout(self) -> None:
+        if not self.connected_to_server:
+            return
+        self.ui.main_layout.setCurrentIndex(1)
+
+    @Slot()
+    def sendMessage(self, message: str) -> None:
+        self.message_list.append(message)
+
+    @Slot()
     def connectToServer(self) -> None:
         if self.connected_to_server:
             return
 
         try:
             print("[CLIENT] Open connection...")
-            config["Connection"]["Connection"] = "Client"
             self.client: socket.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.client.settimeout(2)
             self.client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-
-            self.client.connect((self.ui.host_line_edit.text(), int(self.ui.port_line_edit.text())))
+            self.client.connect((self.ui.client_menu.ui.host_line_edit.text(), int(self.ui.client_menu.ui.port_line_edit.text())))
 
         except:
             print("[CLIENT] Failed connection")
-            config["Connection"]["Connection"] = "None"
             self.client.close()
             return
 
         self.sending_thread = threading.Thread(target=self.handleServer)
         self.sending_thread.start()
 
-
+    @Slot()
     def disconnectFromServer(self) -> None:
         if not self.connected_to_server:
             return
 
         print("[CLIENT] Close connection...")
-        config["Connection"]["Connection"] = "None"
         self.message_list.append(Messages.disconnect)
 
-    def sendMessage(self, message: str) -> None:
-        self.message_list.append(message)
-
+    @Slot()
     def handleServer(self) -> None:
-        config["Connection"]["Connected"] = "True"
+        print("[CLIENT] Connected")
         self.connected_to_server = True
         self.message_list = []
 
@@ -77,25 +87,29 @@ class ClientMenuWidget(QObject):
 
             print(f"[CLIENT] Message sent \"{message}\"")
 
-            message = message.encode(self.format)
+            message = message.encode(Messages.format)
             message_length = len(message)
-            send_length: bytes = str(message_length).encode(self.format)
-            send_length += b" " * (self.header - len(send_length))
+            send_length: bytes = str(message_length).encode(Messages.format)
+            send_length += b" " * (Messages.header - len(send_length))
             self.client.send(send_length)
             self.client.send(message)
 
             # receiving
-            message_length = self.client.recv(self.header).decode(self.format)
+            message_length = self.client.recv(Messages.header).decode(Messages.format)
             if not message_length:
                 continue
             message_length = int(message_length)
 
-            message = self.client.recv(message_length).decode(self.format)
+            message = self.client.recv(message_length).decode(Messages.format)
             if message == Messages.disconnect:
                 self.connected_to_server = False
 
             print(f"[CLIENT] Message received \"{message}\"")
 
         print("[CLIENT] Close connection...")
-        config["Connection"]["Connected"] = "False"
         self.connected_to_server = False
+
+    def backToMainMenu(self) -> None:
+        if self.connected_to_server:
+            self.disconnectFromServer()
+        self.back_to_main_menu.emit()

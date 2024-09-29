@@ -17,13 +17,6 @@ class Config:
         self.config.read(self.filepath)
 
     def createConfig(self):
-        self.config["Connection"] = {
-            "Host": "",
-            "Port": "",
-            "Connection": "None", # Server, Client, None
-            "Connected": "False"
-        }
-        
         self.config["Settings"] = {
             "Text": "",
         }

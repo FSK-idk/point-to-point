@@ -27,6 +27,11 @@ class ServerMenuWidgetUI(QWidget):
         self.close_connection_button.setText("Close connection")
         self.close_connection_button.setFont(button_font)
 
+        self.play_button: QPushButton = QPushButton(self)
+        self.play_button.setFixedWidth(300)
+        self.play_button.setText("Play")
+        self.play_button.setFont(button_font)
+
         self.back_button: QPushButton = QPushButton(self)
         self.back_button.setFixedWidth(300)
         self.back_button.setText("Back")
@@ -41,6 +46,8 @@ class ServerMenuWidgetUI(QWidget):
         button_layout.addWidget(self.disconnect_client_button)
         button_layout.addSpacing(15)
         button_layout.addWidget(self.close_connection_button)
+        button_layout.addSpacing(15)
+        button_layout.addWidget(self.play_button)
         button_layout.addSpacing(15)
         button_layout.addWidget(self.back_button)
 

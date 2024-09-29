@@ -22,11 +22,6 @@ class MainMenuWidgetUI(QWidget):
         self.game_name_label.setFont(label_font)
         self.game_name_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.play_button: QPushButton = QPushButton(self)
-        self.play_button.setFixedWidth(300)
-        self.play_button.setText("Play")
-        self.play_button.setFont(button_font)
-
         self.server_button: QPushButton = QPushButton(self)
         self.server_button.setFixedWidth(300)
         self.server_button.setText("Server")
@@ -49,8 +44,6 @@ class MainMenuWidgetUI(QWidget):
         button_layout.setContentsMargins(0, 0, 0, 0)
         button_layout.setSpacing(0)
         button_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        button_layout.addWidget(self.play_button)
-        button_layout.addSpacing(15)
         button_layout.addWidget(self.server_button)
         button_layout.addSpacing(15)
         button_layout.addWidget(self.client_button)

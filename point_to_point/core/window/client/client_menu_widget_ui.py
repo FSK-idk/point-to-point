@@ -30,18 +30,15 @@ class ClientMenuWidgetUI(QWidget):
         self.disconnect_from_server_button.setText("Disconnect")
         self.disconnect_from_server_button.setFont(button_font)
 
+        self.play_button: QPushButton = QPushButton(self)
+        self.play_button.setFixedWidth(300)
+        self.play_button.setText("Play")
+        self.play_button.setFont(button_font)
+
         self.back_button: QPushButton = QPushButton(self)
         self.back_button.setFixedWidth(300)
         self.back_button.setText("Back")
         self.back_button.setFont(button_font)
-
-        input_layout: QVBoxLayout = QVBoxLayout()
-        input_layout.setContentsMargins(0, 0, 0, 0)
-        input_layout.setSpacing(0)
-        input_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        input_layout.addWidget(self.host_line_edit)
-        input_layout.addSpacing(15)
-        input_layout.addWidget(self.port_line_edit)
 
         button_layout: QVBoxLayout = QVBoxLayout()
         button_layout.setContentsMargins(0, 0, 0, 0)
@@ -55,14 +52,14 @@ class ClientMenuWidgetUI(QWidget):
         button_layout.addSpacing(15)
         button_layout.addWidget(self.disconnect_from_server_button)
         button_layout.addSpacing(15)
+        button_layout.addWidget(self.play_button)
+        button_layout.addSpacing(15)
         button_layout.addWidget(self.back_button)
 
         main_layout: QVBoxLayout = QVBoxLayout()
         main_layout.setContentsMargins(10, 10, 10, 10)
         main_layout.setSpacing(0)
         main_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        main_layout.addLayout(input_layout, 1)
-        main_layout.addSpacing(15)
         main_layout.addLayout(button_layout, 1)
 
         self.setLayout(main_layout)
