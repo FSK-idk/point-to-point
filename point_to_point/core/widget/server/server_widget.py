@@ -18,7 +18,6 @@ class ServerWidget(QObject):
 
         self.ui.main_layout.setCurrentIndex(self.ui.SERVER_MENU_INDEX)
 
-
         self.ui.server_menu.ui.open_connection_button.clicked.connect(self.openConnection)
         self.ui.server_menu.ui.disconnect_client_button.clicked.connect(self.disconnectClient)
         self.ui.server_menu.ui.close_connection_button.clicked.connect(self.closeConnection)
@@ -35,7 +34,7 @@ class ServerWidget(QObject):
 
         self.ui.score.ui.back_button.clicked.connect(self.openServerMenu)
 
-        self.host: str = socket.gethostbyname(socket.gethostname())
+        self.host: str = socket.gethostbyname(socket.gethostname() + ".")
         self.port: int = 5050
 
         self.ui.server_menu.ui.host_label.setText(f"host: {self.host}, port: {self.port}")
@@ -89,6 +88,7 @@ class ServerWidget(QObject):
         self.ui.game.ui.this_input_line.setText(text)
         self.ui.game.ui.other_input_line.setText(text)
         self.sendMessage(MessageType.SETUP_TEXT, text.encode(Message.FORMAT))
+        self.ui.game.ui.this_input_line.setFocus()
         self.ui.main_layout.setCurrentIndex(self.ui.GAME_INDEX)
 
     @Slot()

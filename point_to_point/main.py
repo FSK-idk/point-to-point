@@ -4,10 +4,12 @@ from PySide6.QtGui import QPixmap, QPalette, QColor
 
 from core.window.main_window import MainWindow
 
+import resource_rc
+
 
 def main() -> None:
     app = QApplication()
-    app.setWindowIcon(QPixmap(":/icon/vort.png"))
+    app.setWindowIcon(QPixmap(":/icon/ptop.png"))
     app.setStyle("Fusion")
 
     darkPalette: QPalette = QPalette()

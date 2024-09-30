@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QWidget, QPushButton, QVBoxLayout
+from PySide6.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QHBoxLayout
 from PySide6.QtGui import QFont
 
 from core.widget.input_line.input_line import InputLine
@@ -14,11 +14,21 @@ class GameWidgetUI(QWidget):
         button_font: QFont = QFont()
         button_font.setPointSize(18)
 
-        self.other_input_line: InputLine = InputLine()
+        self.other_label: QLabel = QLabel(self)
+        self.other_label.setFixedWidth(120)
+        self.other_label.setFont(button_font)
+        self.other_label.setText("Opponent")
+
+        self.other_input_line: InputLine = InputLine(self)
         self.other_input_line.setReadOnly(True)
         self.other_input_line.setFixedWidth(600)
         self.other_input_line.setFont(button_font)
         self.other_input_line.setText("Point to Point")
+
+        self.this_label: QLabel = QLabel(self)
+        self.this_label.setFixedWidth(120)
+        self.this_label.setFont(button_font)
+        self.this_label.setText("You")
 
         self.this_input_line: InputLine = InputLine()
         self.this_input_line.setFixedWidth(600)
@@ -29,6 +39,22 @@ class GameWidgetUI(QWidget):
         self.back_button.setFixedWidth(300)
         self.back_button.setText("Back")
         self.back_button.setFont(button_font)
+
+        other_layout: QHBoxLayout = QHBoxLayout()
+        other_layout.setContentsMargins(0, 0, 0, 0)
+        other_layout.setSpacing(0)
+        other_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        other_layout.addWidget(self.other_label)
+        other_layout.addSpacing(15)
+        other_layout.addWidget(self.other_input_line)
+
+        this_layout: QHBoxLayout = QHBoxLayout()
+        this_layout.setContentsMargins(0, 0, 0, 0)
+        this_layout.setSpacing(0)
+        this_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        this_layout.addWidget(self.this_label)
+        this_layout.addSpacing(15)
+        this_layout.addWidget(self.this_input_line)
 
         button_layout: QVBoxLayout = QVBoxLayout()
         button_layout.setContentsMargins(0, 0, 0, 0)
@@ -41,9 +67,9 @@ class GameWidgetUI(QWidget):
         main_layout.setSpacing(0)
         main_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
         main_layout.addStretch()
-        main_layout.addWidget(self.other_input_line)
+        main_layout.addLayout(other_layout)
         main_layout.addStretch()
-        main_layout.addWidget(self.this_input_line)
+        main_layout.addLayout(this_layout)
         main_layout.addStretch()
         main_layout.addLayout(button_layout)
 

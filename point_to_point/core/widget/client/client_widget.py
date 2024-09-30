@@ -65,6 +65,7 @@ class ClientWidget(QObject):
 
     @Slot()
     def openGame(self) -> None:
+        self.ui.game.ui.this_input_line.setFocus()
         self.ui.main_layout.setCurrentIndex(self.ui.GAME_INDEX)
 
     @Slot()

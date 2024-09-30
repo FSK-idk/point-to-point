@@ -1,4 +1,6 @@
 .venv
 __pycache__
+output
 test
 data
+resource_rc.py
