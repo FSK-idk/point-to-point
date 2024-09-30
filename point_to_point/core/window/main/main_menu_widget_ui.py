@@ -32,14 +32,6 @@ class MainMenuWidgetUI(QWidget):
         self.client_button.setText("Client")
         self.client_button.setFont(button_font)
 
-        self.settings_button: QPushButton = QPushButton(self)
-        self.settings_button.setFixedWidth(300)
-        self.settings_button.setText("Settings")
-        self.settings_button.setFont(button_font)
-
-        self.connected_label: QLabel = QLabel(self)
-        self.connected_label.setText("Connected to: None")
-
         button_layout: QVBoxLayout = QVBoxLayout()
         button_layout.setContentsMargins(0, 0, 0, 0)
         button_layout.setSpacing(0)
@@ -47,8 +39,6 @@ class MainMenuWidgetUI(QWidget):
         button_layout.addWidget(self.server_button)
         button_layout.addSpacing(15)
         button_layout.addWidget(self.client_button)
-        button_layout.addSpacing(15)
-        button_layout.addWidget(self.settings_button)
 
         main_layout = QVBoxLayout()
         main_layout.setContentsMargins(10, 10, 10, 10)
@@ -56,7 +46,6 @@ class MainMenuWidgetUI(QWidget):
         main_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
         main_layout.addWidget(self.game_name_label, 1)
         main_layout.addLayout(button_layout, 1)
-        main_layout.addWidget(self.connected_label)
 
         self.setLayout(main_layout)
 

@@ -3,65 +3,80 @@ import socket
 
 from PySide6.QtCore import QObject, Slot, Signal
 
-from core.config.config import config
-from core.connection.messages import Messages
+from core.connection.messages import MessageType, Message
 from core.window.client.client_widget_ui import ClientWidgetUI
 
 
 class ClientWidget(QObject):
-    back_to_main_menu: Signal = Signal()
+    backToMainMenu: Signal = Signal()
 
     def __init__(self) -> None:
         super().__init__()
 
         self.ui: ClientWidgetUI = ClientWidgetUI()
 
-        self.ui.client_menu.ui.play_button.clicked.connect(self.openWaiting)
-        self.ui.client_menu.ui.back_button.clicked.connect(self.backToMainMenu)
-        self.ui.waiting.ui.back_button.clicked.connect(self.openClientMenu)
-        self.ui.game_layout.ui.back_button.clicked.connect(self.openClientMenu)
-
-        self.ui.game_layout.text_changed.connect(self.onTextChanged)
+        self.ui.main_layout.setCurrentIndex(self.ui.CLIENT_MENU_INDEX)
 
         self.ui.client_menu.ui.connect_to_server_button.clicked.connect(self.connectToServer)
         self.ui.client_menu.ui.disconnect_from_server_button.clicked.connect(self.disconnectFromServer)
+        self.ui.client_menu.ui.play_button.clicked.connect(self.openWaiting)
+        self.ui.client_menu.ui.back_button.clicked.connect(self.onClientMenuBack)
+
+        self.ui.waiting.ui.back_button.clicked.connect(self.openClientMenu)
+
+        self.ui.game.ui.back_button.clicked.connect(self.openClientMenu)
+        self.ui.game.textChanged.connect(self.onTextChanged)
+
+        self.ui.score.ui.back_button.clicked.connect(self.openClientMenu)
 
         self.connected_to_server: bool = False
 
         self.server_is_ready: bool = False
         self.client_is_ready: bool = False
 
-        self.message_list: list[tuple[str, bytes | None]] = []
+        self.message_list: list[Message] = []
 
         self.ui.show()
 
     @Slot()
     def openClientMenu(self) -> None:
         self.client_is_ready = False
-        self.sendMessage(Messages.not_ready)
-        self.ui.current_widget = "client_menu"
-        self.ui.main_layout.setCurrentIndex(0)
+        self.sendMessage(MessageType.NOT_READY)
+
+        match self.ui.main_layout.currentIndex():
+            case self.ui.GAME_INDEX:
+                self.sendMessage(MessageType.INTERRUPT_GAME)
+
+        self.ui.main_layout.setCurrentIndex(self.ui.CLIENT_MENU_INDEX)
 
     @Slot()
     def openWaiting(self) -> None:
         if not self.connected_to_server:
             return
+
         self.client_is_ready = True
-        self.sendMessage(Messages.ready)
+        self.sendMessage(MessageType.READY)
+
         if self.server_is_ready:
-            self.openGameLayout()
-            self.sendMessage(Messages.start)
-        self.ui.current_widget = "waiting"
-        self.ui.main_layout.setCurrentIndex(1)
+            self.sendMessage(MessageType.START_GAME)
+            self.openGame()
+
+        self.ui.main_layout.setCurrentIndex(self.ui.WAITING_INDEX)
 
     @Slot()
-    def openGameLayout(self) -> None:
-        self.ui.current_widget = "game_layout"
-        self.ui.main_layout.setCurrentIndex(2)
+    def openGame(self) -> None:
+        self.ui.main_layout.setCurrentIndex(self.ui.GAME_INDEX)
 
     @Slot()
-    def sendMessage(self, message: str, data: bytes | None = None) -> None:
-        self.message_list.append((message, data))
+    def openScore(self) -> None:
+        self.client_is_ready = False
+        self.sendMessage(MessageType.NOT_READY)
+
+        self.ui.main_layout.setCurrentIndex(self.ui.SCORE_INDEX)
+
+    @Slot()
+    def sendMessage(self, type: str, data: bytes | None = None) -> None:
+        self.message_list.append(Message(type, data))
 
     @Slot()
     def connectToServer(self) -> None:
@@ -89,79 +104,97 @@ class ClientWidget(QObject):
             return
 
         print("[CLIENT] Close connection...")
-        self.message_list.append((Messages.disconnect, None))
+        self.sendMessage(MessageType.DISCONNECT)
 
-    @Slot()
     def handleServer(self) -> None:
         print("[CLIENT] Connected")
+        self.ui.client_menu.ui.connection_label.setText("Connection is open")
         self.connected_to_server = True
         self.message_list = []
 
         while self.connected_to_server:
             # sending
             if not self.message_list:
-                self.message_list.append((Messages.nothing, None))
+                self.sendMessage(MessageType.NOTHING)
 
-            message, data = self.message_list[0]
+            message = self.message_list[0]
             self.message_list = self.message_list[1::]
 
-            print(f"[CLIENT] Message sent \"{message}\"")
-
-            message_encoded = message.encode(Messages.format)
-            message_length = len(message_encoded)
-            send_length: bytes = str(message_length).encode(Messages.format)
-            send_length += b" " * (Messages.header - len(send_length))
+            type_encoded = message.type.encode(Message.FORMAT)
+            type_length = len(type_encoded)
+            send_length: bytes = str(type_length).encode(Message.FORMAT)
+            send_length += b" " * (Message.HEADER - len(send_length))
             self.client.send(send_length)
-            self.client.send(message_encoded)
-            if message == Messages.text_changed:
-                if data is None:
-                    data = "None".encode(Messages.format)
-                data_length = len(data)
-                send_length: bytes = str(data_length).encode(Messages.format)
-                send_length += b" " * (Messages.header - len(send_length))
+            self.client.send(type_encoded)
+
+            if message.type in [MessageType.TEXT_CHANGED]:
+                data_length = len(message.data)
+                send_length: bytes = str(data_length).encode(Message.FORMAT)
+                send_length += b" " * (Message.HEADER - len(send_length))
                 self.client.send(send_length)
-                self.client.send(data)
+                self.client.send(message.data)
+
+            print(f"[CLIENT] Message sent \"{message.type}\"")
 
             # receiving
-            message_length = self.client.recv(Messages.header).decode(Messages.format)
-            if not message_length:
+            type_length = self.client.recv(Message.HEADER).decode(Message.FORMAT)
+            if not type_length:
                 continue
-            message_length = int(message_length)
+            type_length = int(type_length)
+            type = self.client.recv(type_length).decode(Message.FORMAT)
 
-            message = self.client.recv(message_length).decode(Messages.format)
-            if message == Messages.disconnect:
-                self.connected_to_server = False
-            if message == Messages.ready:
-                self.server_is_ready = True
-                if self.client_is_ready:
-                    self.openGameLayout()
-                    self.sendMessage(Messages.start)
-            if message == Messages.not_ready:
-                self.server_is_ready = False
-                if self.ui.current_widget == "game_layout":
-                    self.openClientMenu()
-                    self.sendMessage(Messages.not_ready)
-            if message == Messages.start:
-                self.openGameLayout()
-            if message == Messages.text_changed:
-                data_length = self.client.recv(Messages.header).decode(Messages.format)
-                data_length = int(data_length)
-                data = self.client.recv(data_length).decode(Messages.format)
-                self.ui.game_layout.ui.other_input_line.setText(data)
-            # if message == Messages.finished:
-            #     self.server_is_ready = False
-            #     self.openClientMenu()
+            match type:
+                case MessageType.DISCONNECT:
+                    self.connected_to_server = False
 
-            print(f"[CLIENT] Message received \"{message}\"")
+                case MessageType.READY:
+                    self.server_is_ready = True
+                    if self.client_is_ready:
+                        self.openGame()
+                        self.sendMessage(MessageType.START_GAME)
+
+                case MessageType.NOT_READY:
+                    self.server_is_ready = False
+
+                case MessageType.START_GAME:
+                    self.openGame()
+
+                case MessageType.SETUP_TEXT:
+                    data_length = self.client.recv(Message.HEADER).decode(Message.FORMAT)
+                    data_length = int(data_length)
+                    data = self.client.recv(data_length).decode(Message.FORMAT)
+                    self.ui.game.ui.this_input_line.setText(data)
+                    self.ui.game.ui.other_input_line.setText(data)
+
+                case MessageType.TEXT_CHANGED:
+                    data_length = self.client.recv(Message.HEADER).decode(Message.FORMAT)
+                    data_length = int(data_length)
+                    data = self.client.recv(data_length).decode(Message.FORMAT)
+                    self.ui.game.ui.other_input_line.setText(data)
+
+                case MessageType.FINISH_GAME:
+                    self.ui.score.setScoreText("Opponent won")
+                    self.openScore()
+
+                case MessageType.INTERRUPT_GAME:
+                    self.ui.score.setScoreText("Opponent interrupted the game")
+                    self.openScore()
+
+            print(f"[CLIENT] Message received \"{type}\"")
 
         print("[CLIENT] Close connection...")
-        self.connected_to_server = False
+        self.ui.client_menu.ui.connection_label.setText("Connection is closed")
 
-    def backToMainMenu(self) -> None:
+    @Slot()
+    def onClientMenuBack(self) -> None:
         if self.connected_to_server:
             self.disconnectFromServer()
-        self.back_to_main_menu.emit()
+        self.backToMainMenu.emit()
 
+    @Slot()
     def onTextChanged(self, text: str) -> None:
-        self.sendMessage(Messages.text_changed, text.encode(Messages.format))
-
+        self.sendMessage(MessageType.TEXT_CHANGED, text.encode(Message.FORMAT))
+        if not text:
+            self.ui.score.setScoreText("You won")
+            self.sendMessage(MessageType.FINISH_GAME)
+            self.openScore()

@@ -2,7 +2,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
 from PySide6.QtGui import QPixmap, QPalette, QColor
 
-from core.window.main_window import MainWindow
+from core.window.main.main_window import MainWindow
 
 
 def main() -> None:
@@ -24,6 +24,7 @@ def main() -> None:
     darkPalette.setColor(QPalette.ColorRole.Link, QColor(42, 130, 218))
     darkPalette.setColor(QPalette.ColorRole.Highlight, QColor(42, 130, 218))
     darkPalette.setColor(QPalette.ColorRole.HighlightedText, Qt.GlobalColor.black)
+    darkPalette.setColor(QPalette.ColorRole.PlaceholderText, Qt.GlobalColor.gray)
     app.setPalette(darkPalette)
     app.setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white; }")
 

@@ -1,6 +1,6 @@
 from PySide6.QtCore import QObject
 
-from core.window.game_layout.waiting_widget_ui import WaitingWidgetUI
+from core.window.game.waiting_widget_ui import WaitingWidgetUI
 
 
 class WaitingWidget(QObject):

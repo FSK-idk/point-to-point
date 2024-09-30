@@ -1,6 +1,6 @@
-from PySide6.QtCore import Qt, Signal
-from PySide6.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLineEdit, QTextEdit
-from PySide6.QtGui import QFont, QKeyEvent, QEnterEvent, QFocusEvent, QMouseEvent
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QWidget, QPushButton, QVBoxLayout, QTextEdit
+from PySide6.QtGui import QFont
 
 
 class SettingsWidgetUI(QWidget):

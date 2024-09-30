@@ -18,7 +18,7 @@ class Config:
 
     def createConfig(self):
         self.config["Settings"] = {
-            "Text": "",
+            "Text": "Point to Point",
         }
 
         with open(self.filepath, 'w') as file:

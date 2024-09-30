@@ -1,17 +1,15 @@
-from PySide6.QtCore import Qt, Signal
-from PySide6.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLineEdit
-from PySide6.QtGui import QFont, QKeyEvent, QEnterEvent, QFocusEvent, QMouseEvent
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QWidget, QPushButton, QVBoxLayout
+from PySide6.QtGui import QFont
 
 from core.widget.input_line import InputLine
 
 
-class GameLayoutWidgetUI(QWidget):
+class GameWidgetUI(QWidget):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
         self.resize(650, 400)
-
-        text: str = "Hello my friend!"
 
         button_font: QFont = QFont()
         button_font.setPointSize(18)
@@ -20,12 +18,12 @@ class GameLayoutWidgetUI(QWidget):
         self.other_input_line.setReadOnly(True)
         self.other_input_line.setFixedWidth(600)
         self.other_input_line.setFont(button_font)
-        self.other_input_line.setText(text)
+        self.other_input_line.setText("Point to Point")
 
         self.this_input_line: InputLine = InputLine()
         self.this_input_line.setFixedWidth(600)
         self.this_input_line.setFont(button_font)
-        self.this_input_line.setText(text)
+        self.this_input_line.setText("Point to Point")
 
         self.back_button: QPushButton = QPushButton(self)
         self.back_button.setFixedWidth(300)

@@ -1,8 +1,10 @@
 from PySide6.QtWidgets import QWidget, QStackedLayout
 
 from core.window.server.server_menu_widget import ServerMenuWidget
-from core.window.game_layout.waiting_widget import WaitingWidget
-from core.window.game_layout.game_layout_widget import GameLayoutWidget
+from core.window.server.settings_widget import SettingsWidget
+from core.window.game.waiting_widget import WaitingWidget
+from core.window.game.game_widget import GameWidget
+from core.window.game.score_widget import ScoreWidget
 
 
 class ServerWidgetUI(QWidget):
@@ -13,15 +15,21 @@ class ServerWidgetUI(QWidget):
         self.setMinimumSize(400, 300)
 
         self.server_menu: ServerMenuWidget = ServerMenuWidget()
+        self.settings: SettingsWidget = SettingsWidget()
         self.waiting: WaitingWidget = WaitingWidget()
-        self.game_layout: GameLayoutWidget = GameLayoutWidget()
+        self.game: GameWidget = GameWidget()
+        self.score: ScoreWidget = ScoreWidget()
 
         self.main_layout: QStackedLayout = QStackedLayout()
         self.main_layout.addWidget(self.server_menu.ui)
+        self.SERVER_MENU_INDEX = 0
+        self.main_layout.addWidget(self.settings.ui)
+        self.SETTINGS_MENU_INDEX = 1
         self.main_layout.addWidget(self.waiting.ui)
-        self.main_layout.addWidget(self.game_layout.ui)
-
-        self.current_widget: str = "server_menu"
-        self.main_layout.setCurrentIndex(0)
+        self.WAITING_INDEX = 2
+        self.main_layout.addWidget(self.game.ui)
+        self.GAME_INDEX = 3
+        self.main_layout.addWidget(self.score.ui)
+        self.SCORE_INDEX = 4
 
         self.setLayout(self.main_layout)
