@@ -2,8 +2,8 @@
 
 A simple game for two that can test your typing speed
 
-![image](https://github.com/user-attachments/assets/0d714291-afa8-4699-952f-27fe1c5dee9f) | ![image](https://github.com/user-attachments/assets/81b15c5b-f0e9-400c-96c4-74988c90d87a)
-:----------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------:
+| ![image](https://github.com/user-attachments/assets/0d714291-afa8-4699-952f-27fe1c5dee9f) | ![image](https://github.com/user-attachments/assets/81b15c5b-f0e9-400c-96c4-74988c90d87a) |
+| :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: |
 
 ## ✨ Features
 
@@ -11,7 +11,7 @@ A simple game for two that can test your typing speed
 - Constant stable connection
 - Saving text for typing
 
-## 🎲 How to play
+## 🎲 How to start playing
 
 There are two players: a server and a client.
 
@@ -41,4 +41,3 @@ Run these commands
     cd point-to-point
     ./scripts/build.sh
     ./scripts/run.sh
-
