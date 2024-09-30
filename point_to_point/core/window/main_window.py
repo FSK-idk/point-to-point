@@ -1,6 +1,6 @@
 from PySide6.QtCore import QObject, Slot
 
-from core.window.main.main_window_ui import MainWindowUI
+from core.window.main_window_ui import MainWindowUI
 
 
 class MainWindow(QObject):

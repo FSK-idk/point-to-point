@@ -3,8 +3,8 @@ import socket
 
 from PySide6.QtCore import QObject, Slot, Signal
 
-from core.connection.messages import MessageType, Message
-from core.window.client.client_widget_ui import ClientWidgetUI
+from core.connection.message import MessageType, Message
+from core.widget.client.client_widget_ui import ClientWidgetUI
 
 
 class ClientWidget(QObject):

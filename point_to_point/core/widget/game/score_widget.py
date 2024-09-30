@@ -1,6 +1,6 @@
 from PySide6.QtCore import QObject
 
-from core.window.game.score_widget_ui import ScoreWidgetUI
+from core.widget.game.score_widget_ui import ScoreWidgetUI
 
 
 class ScoreWidget(QObject):

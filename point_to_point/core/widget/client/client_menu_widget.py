@@ -1,6 +1,6 @@
 from PySide6.QtCore import QObject
 
-from core.window.client.client_menu_widget_ui import ClientMenuWidgetUI
+from core.widget.client.client_menu_widget_ui import ClientMenuWidgetUI
 
 
 class ClientMenuWidget(QObject):

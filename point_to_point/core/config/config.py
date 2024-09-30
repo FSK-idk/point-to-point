@@ -1,4 +1,3 @@
-from typing import List, Tuple
 import configparser
 import os
 
@@ -27,7 +26,7 @@ class Config:
     def __getitem__(self, index):
         return self.config[index]
     
-    def items(self, section: str) -> List[Tuple[str, str]]:
+    def items(self, section: str) -> list[tuple[str, str]]:
         return self.config.items(section)
     
     def write(self):

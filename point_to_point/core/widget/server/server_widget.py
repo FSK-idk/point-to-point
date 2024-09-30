@@ -4,8 +4,8 @@ import socket
 from PySide6.QtCore import QObject, Slot, Signal
 
 from core.config.config import config
-from core.connection.messages import MessageType, Message
-from core.window.server.server_widget_ui import ServerWidgetUI
+from core.connection.message import MessageType, Message
+from core.widget.server.server_widget_ui import ServerWidgetUI
 
 
 class ServerWidget(QObject):

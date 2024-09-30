@@ -1,6 +1,6 @@
 from PySide6.QtCore import QObject
 
-from core.window.main.main_menu_widget_ui import MainMenuWidgetUI
+from core.widget.main.main_menu_widget_ui import MainMenuWidgetUI
 
 
 class MainMenuWidget(QObject):

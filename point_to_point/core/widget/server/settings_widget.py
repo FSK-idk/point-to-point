@@ -1,6 +1,6 @@
 from PySide6.QtCore import QObject
 
-from core.window.server.settings_widget_ui import SettingsWidgetUI
+from core.widget.server.settings_widget_ui import SettingsWidgetUI
 
 
 class SettingsWidget(QObject):

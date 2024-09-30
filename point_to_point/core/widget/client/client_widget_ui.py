@@ -1,9 +1,9 @@
 from PySide6.QtWidgets import QWidget, QStackedLayout
 
-from core.window.client.client_menu_widget import ClientMenuWidget
-from core.window.game.waiting_widget import WaitingWidget
-from core.window.game.game_widget import GameWidget
-from core.window.game.score_widget import ScoreWidget
+from core.widget.client.client_menu_widget import ClientMenuWidget
+from core.widget.game.waiting_widget import WaitingWidget
+from core.widget.game.game_widget import GameWidget
+from core.widget.game.score_widget import ScoreWidget
 
 
 class ClientWidgetUI(QWidget):

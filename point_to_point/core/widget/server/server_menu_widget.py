@@ -1,6 +1,6 @@
 from PySide6.QtCore import QObject
 
-from core.window.server.server_menu_widget_ui import ServerMenuWidgetUI
+from core.widget.server.server_menu_widget_ui import ServerMenuWidgetUI
 
 
 class ServerMenuWidget(QObject):

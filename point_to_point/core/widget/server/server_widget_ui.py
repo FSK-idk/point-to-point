@@ -1,10 +1,10 @@
 from PySide6.QtWidgets import QWidget, QStackedLayout
 
-from core.window.server.server_menu_widget import ServerMenuWidget
-from core.window.server.settings_widget import SettingsWidget
-from core.window.game.waiting_widget import WaitingWidget
-from core.window.game.game_widget import GameWidget
-from core.window.game.score_widget import ScoreWidget
+from core.widget.server.server_menu_widget import ServerMenuWidget
+from core.widget.server.settings_widget import SettingsWidget
+from core.widget.game.waiting_widget import WaitingWidget
+from core.widget.game.game_widget import GameWidget
+from core.widget.game.score_widget import ScoreWidget
 
 
 class ServerWidgetUI(QWidget):

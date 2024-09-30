@@ -2,7 +2,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
 from PySide6.QtGui import QPixmap, QPalette, QColor
 
-from core.window.main.main_window import MainWindow
+from core.window.main_window import MainWindow
 
 
 def main() -> None:

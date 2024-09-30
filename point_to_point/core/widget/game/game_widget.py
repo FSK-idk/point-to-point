@@ -1,6 +1,6 @@
 from PySide6.QtCore import QObject, Signal
 
-from core.window.game.game_widget_ui import GameWidgetUI
+from core.widget.game.game_widget_ui import GameWidgetUI
 
 
 class GameWidget(QObject):

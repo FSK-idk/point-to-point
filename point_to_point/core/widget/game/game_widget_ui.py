@@ -2,7 +2,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget, QPushButton, QVBoxLayout
 from PySide6.QtGui import QFont
 
-from core.widget.input_line import InputLine
+from core.widget.input_line.input_line import InputLine
 
 
 class GameWidgetUI(QWidget):
