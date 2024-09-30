@@ -2,6 +2,9 @@
 
 A simple game for two that can test your typing speed
 
+![image](https://github.com/user-attachments/assets/0d714291-afa8-4699-952f-27fe1c5dee9f) | ![image](https://github.com/user-attachments/assets/81b15c5b-f0e9-400c-96c4-74988c90d87a)
+:----------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------:
+
 ## ✨ Features
 
 - Server and client interaction
@@ -32,8 +35,10 @@ Download zip archive and unzip it. Run .exe (antivirus may complain).
 
 ### Linux
 
-Run this commands
+Run these commands
 
+    git clone git@github.com:FSK-idk/point-to-point.git
+    cd point-to-point
     ./scripts/build.sh
     ./scripts/run.sh
 
