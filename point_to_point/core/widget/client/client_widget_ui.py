@@ -1,4 +1,6 @@
+from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QWidget, QStackedLayout
+from PySide6.QtGui import QCloseEvent
 
 from core.widget.client.client_menu_widget import ClientMenuWidget
 from core.widget.game.waiting_widget import WaitingWidget
@@ -7,16 +9,18 @@ from core.widget.game.score_widget import ScoreWidget
 
 
 class ClientWidgetUI(QWidget):
+    closeUI: Signal = Signal()
+
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
         self.setGeometry(0, 0, 1000, 600)
         self.setMinimumSize(400, 300)
 
-        self.client_menu: ClientMenuWidget = ClientMenuWidget()
-        self.waiting: WaitingWidget = WaitingWidget()
-        self.game: GameWidget = GameWidget()
-        self.score: ScoreWidget = ScoreWidget()
+        self.client_menu: ClientMenuWidget = ClientMenuWidget(self)
+        self.waiting: WaitingWidget = WaitingWidget(self)
+        self.game: GameWidget = GameWidget(self)
+        self.score: ScoreWidget = ScoreWidget(self)
 
         self.main_layout: QStackedLayout = QStackedLayout()
         self.main_layout.addWidget(self.client_menu.ui)
@@ -30,3 +34,6 @@ class ClientWidgetUI(QWidget):
 
         self.setLayout(self.main_layout)
 
+    def closeEvent(self, event: QCloseEvent) -> None:
+        self.closeUI.emit()
+        super().closeEvent(event)

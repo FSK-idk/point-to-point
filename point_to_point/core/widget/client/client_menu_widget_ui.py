@@ -9,38 +9,38 @@ class ClientMenuWidgetUI(QWidget):
 
         self.resize(650, 400)
 
-        button_font: QFont = QFont()
-        button_font.setPointSize(18)
+        font18: QFont = QFont()
+        font18.setPointSize(18)
 
-        self.host_line_edit: QLineEdit = QLineEdit()
+        self.host_line_edit: QLineEdit = QLineEdit(self)
         self.host_line_edit.setFixedWidth(300)
-        self.host_line_edit.setFont(button_font)
+        self.host_line_edit.setFont(font18)
         self.host_line_edit.setPlaceholderText("Host")
 
-        self.port_line_edit: QLineEdit = QLineEdit()
+        self.port_line_edit: QLineEdit = QLineEdit(self)
         self.port_line_edit.setFixedWidth(300)
-        self.port_line_edit.setFont(button_font)
+        self.port_line_edit.setFont(font18)
         self.port_line_edit.setPlaceholderText("Port")
 
         self.connect_to_server_button: QPushButton = QPushButton(self)
         self.connect_to_server_button.setFixedWidth(300)
         self.connect_to_server_button.setText("Connect")
-        self.connect_to_server_button.setFont(button_font)
+        self.connect_to_server_button.setFont(font18)
 
         self.disconnect_from_server_button: QPushButton = QPushButton(self)
         self.disconnect_from_server_button.setFixedWidth(300)
         self.disconnect_from_server_button.setText("Disconnect")
-        self.disconnect_from_server_button.setFont(button_font)
+        self.disconnect_from_server_button.setFont(font18)
 
         self.play_button: QPushButton = QPushButton(self)
         self.play_button.setFixedWidth(300)
         self.play_button.setText("Play")
-        self.play_button.setFont(button_font)
+        self.play_button.setFont(font18)
 
         self.back_button: QPushButton = QPushButton(self)
         self.back_button.setFixedWidth(300)
         self.back_button.setText("Back")
-        self.back_button.setFont(button_font)
+        self.back_button.setFont(font18)
 
         self.connection_label: QLabel = QLabel(self)
         self.connection_label.setText("Connection is closed")

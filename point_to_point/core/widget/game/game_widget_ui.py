@@ -11,34 +11,34 @@ class GameWidgetUI(QWidget):
 
         self.resize(650, 400)
 
-        button_font: QFont = QFont()
-        button_font.setPointSize(18)
+        font18: QFont = QFont()
+        font18.setPointSize(18)
 
         self.other_label: QLabel = QLabel(self)
         self.other_label.setFixedWidth(120)
-        self.other_label.setFont(button_font)
+        self.other_label.setFont(font18)
         self.other_label.setText("Opponent")
 
         self.other_input_line: InputLine = InputLine(self)
         self.other_input_line.setReadOnly(True)
         self.other_input_line.setFixedWidth(600)
-        self.other_input_line.setFont(button_font)
+        self.other_input_line.setFont(font18)
         self.other_input_line.setText("Point to Point")
 
         self.this_label: QLabel = QLabel(self)
         self.this_label.setFixedWidth(120)
-        self.this_label.setFont(button_font)
+        self.this_label.setFont(font18)
         self.this_label.setText("You")
 
-        self.this_input_line: InputLine = InputLine()
+        self.this_input_line: InputLine = InputLine(self)
         self.this_input_line.setFixedWidth(600)
-        self.this_input_line.setFont(button_font)
+        self.this_input_line.setFont(font18)
         self.this_input_line.setText("Point to Point")
 
         self.back_button: QPushButton = QPushButton(self)
         self.back_button.setFixedWidth(300)
         self.back_button.setText("Back")
-        self.back_button.setFont(button_font)
+        self.back_button.setFont(font18)
 
         other_layout: QHBoxLayout = QHBoxLayout()
         other_layout.setContentsMargins(0, 0, 0, 0)

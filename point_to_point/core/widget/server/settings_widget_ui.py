@@ -9,17 +9,17 @@ class SettingsWidgetUI(QWidget):
 
         self.resize(650, 400)
 
-        button_font: QFont = QFont()
-        button_font.setPointSize(18)
+        font18: QFont = QFont()
+        font18.setPointSize(18)
 
-        self.text_edit: QTextEdit = QTextEdit()
+        self.text_edit: QTextEdit = QTextEdit(self)
         self.text_edit.setFixedWidth(600)
-        self.text_edit.setFont(button_font)
+        self.text_edit.setFont(font18)
 
         self.back_button: QPushButton = QPushButton(self)
         self.back_button.setFixedWidth(300)
         self.back_button.setText("Back")
-        self.back_button.setFont(button_font)
+        self.back_button.setFont(font18)
 
         button_layout: QVBoxLayout = QVBoxLayout()
         button_layout.setContentsMargins(0, 0, 0, 0)

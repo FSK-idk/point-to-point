@@ -9,18 +9,18 @@ class ScoreWidgetUI(QWidget):
 
         self.resize(650, 400)
 
-        button_font: QFont = QFont()
-        button_font.setPointSize(18)
+        font18: QFont = QFont()
+        font18.setPointSize(18)
 
         self.score_label: QLabel = QLabel(self)
         self.score_label.setText("None")
-        self.score_label.setFont(button_font)
+        self.score_label.setFont(font18)
         self.score_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.back_button: QPushButton = QPushButton(self)
         self.back_button.setFixedWidth(300)
         self.back_button.setText("Back")
-        self.back_button.setFont(button_font)
+        self.back_button.setFont(font18)
 
         label_layout: QVBoxLayout = QVBoxLayout()
         label_layout.setContentsMargins(0, 0, 0, 0)

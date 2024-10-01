@@ -9,17 +9,17 @@ class WaitingWidgetUI(QWidget):
 
         self.resize(650, 400)
 
-        button_font: QFont = QFont()
-        button_font.setPointSize(18)
+        font18: QFont = QFont()
+        font18.setPointSize(18)
 
         self.waiting_label: QLabel = QLabel(self)
         self.waiting_label.setText("Wating for another player")
-        self.waiting_label.setFont(button_font)
+        self.waiting_label.setFont(font18)
 
         self.back_button: QPushButton = QPushButton(self)
         self.back_button.setFixedWidth(300)
         self.back_button.setText("Back")
-        self.back_button.setFont(button_font)
+        self.back_button.setFont(font18)
 
         main_layout: QVBoxLayout = QVBoxLayout()
         main_layout.setContentsMargins(10, 10, 10, 10)

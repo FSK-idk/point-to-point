@@ -1,4 +1,6 @@
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QMainWindow, QWidget, QStackedLayout
+from PySide6.QtGui import QCloseEvent
 
 from core.widget.main.main_menu_widget import MainMenuWidget
 from core.widget.server.server_widget import ServerWidget
@@ -13,9 +15,9 @@ class MainWindowUI(QMainWindow):
         self.setMinimumSize(400, 300)
         self.setWindowTitle("Point to Point")
 
-        self.main_menu: MainMenuWidget = MainMenuWidget()
-        self.server: ServerWidget = ServerWidget()
-        self.client: ClientWidget = ClientWidget()
+        self.main_menu: MainMenuWidget = MainMenuWidget(self)
+        self.server: ServerWidget = ServerWidget(self)
+        self.client: ClientWidget = ClientWidget(self)
 
         self.main_layout: QStackedLayout = QStackedLayout()
         self.main_layout.addWidget(self.main_menu.ui)
@@ -24,7 +26,11 @@ class MainWindowUI(QMainWindow):
 
         self.main_layout.setCurrentIndex(0)
 
-        self.widget = QWidget()
+        self.widget = QWidget(self)
         self.widget.setLayout(self.main_layout)
         self.setCentralWidget(self.widget)
 
+    def closeEvent(self, event: QCloseEvent) -> None:
+        for children in self.findChildren(QWidget):
+            children.close()
+        super().closeEvent(event)

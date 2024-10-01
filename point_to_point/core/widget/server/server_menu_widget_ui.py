@@ -9,38 +9,38 @@ class ServerMenuWidgetUI(QWidget):
 
         self.resize(650, 400)
 
-        button_font: QFont = QFont()
-        button_font.setPointSize(18)
+        font18: QFont = QFont()
+        font18.setPointSize(18)
 
         self.open_connection_button: QPushButton = QPushButton(self)
         self.open_connection_button.setFixedWidth(300)
         self.open_connection_button.setText("Open connection")
-        self.open_connection_button.setFont(button_font)
+        self.open_connection_button.setFont(font18)
 
         self.disconnect_client_button: QPushButton = QPushButton(self)
         self.disconnect_client_button.setFixedWidth(300)
         self.disconnect_client_button.setText("Disconnect client")
-        self.disconnect_client_button.setFont(button_font)
+        self.disconnect_client_button.setFont(font18)
 
         self.close_connection_button: QPushButton = QPushButton(self)
         self.close_connection_button.setFixedWidth(300)
         self.close_connection_button.setText("Close connection")
-        self.close_connection_button.setFont(button_font)
+        self.close_connection_button.setFont(font18)
 
         self.play_button: QPushButton = QPushButton(self)
         self.play_button.setFixedWidth(300)
         self.play_button.setText("Play")
-        self.play_button.setFont(button_font)
+        self.play_button.setFont(font18)
 
         self.settings_button: QPushButton = QPushButton(self)
         self.settings_button.setFixedWidth(300)
         self.settings_button.setText("Settings")
-        self.settings_button.setFont(button_font)
+        self.settings_button.setFont(font18)
 
         self.back_button: QPushButton = QPushButton(self)
         self.back_button.setFixedWidth(300)
         self.back_button.setText("Back")
-        self.back_button.setFont(button_font)
+        self.back_button.setFont(font18)
 
         self.host_label: QLabel = QLabel(self)
         self.host_label.setText("host: unknown, port: unknown")
