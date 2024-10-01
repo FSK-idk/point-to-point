@@ -54,11 +54,10 @@ class Server(QObject):
         if not self.client_is_connected:
             return
 
-        print("[SERVER] Client disconnection...")
-        self.clientDisconnected.emit()
-        self.client_is_connected = False
-
         self.sendMessage(MessageType.DISCONNECT)
+
+        while self.client_is_connected:
+            continue
 
     @Slot()
     def closeConnection(self) -> None:
@@ -113,7 +112,7 @@ class Server(QObject):
 
             match type:
                 case MessageType.DISCONNECT:
-                    self.disconnectClient()
+                    self.sendMessage(MessageType.DISCONNECT)
                     self.receivedDisconnect.emit()
 
                 case MessageType.READY:
@@ -159,9 +158,11 @@ class Server(QObject):
                 send_length += b" " * (Message.HEADER - len(send_length))
                 self.client.send(send_length)
                 self.client.send(message.data)
+            if message.type == MessageType.DISCONNECT:
+                print("[SERVER] Client disconnection...")
+                self.clientDisconnected.emit()
+                self.client_is_connected = False
 
             print(f"[SERVER] Message sent \"{message.type}\"")
-
-        # self.client.close()
 
 

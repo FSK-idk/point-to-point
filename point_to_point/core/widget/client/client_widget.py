@@ -67,11 +67,11 @@ class ClientWidget(QObject):
 
         self.client.sendMessage(MessageType.READY)
 
+        self.ui.main_layout.setCurrentIndex(self.ui.WAITING_INDEX)
+
         if self.server_is_ready:
             self.client.sendMessage(MessageType.START_GAME)
             self.openGame()
-
-        self.ui.main_layout.setCurrentIndex(self.ui.WAITING_INDEX)
 
     @Slot()
     def openGame(self) -> None:
@@ -91,6 +91,9 @@ class ClientWidget(QObject):
 
     @Slot()
     def onClientMenuBack(self) -> None:
+        self.client_is_ready = False
+        self.client.sendMessage(MessageType.NOT_READY)
+
         if self.client.connected_to_server:
             self.client.disconnectFromServer()
         self.backToMainMenu.emit()

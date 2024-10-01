@@ -88,8 +88,8 @@ class ServerWidget(QObject):
         if self.client_is_ready:
             self.server.sendMessage(MessageType.START_GAME)
             self.openGame()
-
-        self.ui.main_layout.setCurrentIndex(self.ui.WAITING_INDEX)
+        else:
+            self.ui.main_layout.setCurrentIndex(self.ui.WAITING_INDEX)
 
     @Slot()
     def openGame(self) -> None:
@@ -109,6 +109,9 @@ class ServerWidget(QObject):
 
     @Slot()
     def onServerMenuBack(self) -> None:
+        self.server_is_ready = False
+        self.server.sendMessage(MessageType.NOT_READY)
+
         if self.server.listeing_to_clients:
             self.server.closeConnection()
         self.backToMainMenu.emit()

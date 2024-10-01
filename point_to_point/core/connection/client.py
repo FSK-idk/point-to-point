@@ -49,7 +49,6 @@ class Client(QObject):
         self.sending_thread = threading.Thread(target=self.handleServer)
         self.sending_thread.start()
 
-
     @Slot()
     def disconnectFromServer(self) -> None:
         if not self.connected_to_server:
